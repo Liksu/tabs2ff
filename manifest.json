@@ -1,0 +1,21 @@
+﻿{
+  "manifest_version": 2,
+
+  "name": "Send all tabs to Funny-feed",
+  "description": "This extension will send all tabs in current window to funny-feed.com and then close them",
+  "version": "1.5.1",
+  "author": "Liksu",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_title": "Move all to funny-feed"
+  },
+  "background": {
+    "scripts": ["action.js"], "persistent": false
+  },
+  "icons": {
+	"16": "context.png"
+  },
+  "options_page": "options.html",
+  "permissions": ["notifications", "contextMenus", "storage", "activeTab", "tabs", "http://*/*", "https://*/*"]
+}

@@ -107,10 +107,21 @@ chrome.runtime.onInstalled.addListener(function() {
  * Action to context menu, will send image to funny-feed
  */
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-	send(info.selectionText || info.srcUrl).then(
-		resp => {
-			info.pageUrl == info.srcUrl && chrome.tabs.remove(tab.id);
-		},
-		() => {}
-	);
+	if (info.selectionText) {
+		chrome.tabs.executeScript({
+			code: "window.getSelection().toString();"
+		}, selection => {
+			send(selection[0]).then(
+				() => {},
+				() => {}
+			);
+		});	
+	} else {
+		send(info.srcUrl).then(
+			resp => {
+				info.pageUrl == info.srcUrl && chrome.tabs.remove(tab.id);
+			},
+			() => {}
+		);
+	}
 });

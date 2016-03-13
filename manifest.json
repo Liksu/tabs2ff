@@ -3,7 +3,7 @@
 
   "name": "Send all tabs to Funny-feed",
   "description": "This extension will send all tabs in current window to funny-feed.com and then close them",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "author": "Liksu",
 
   "browser_action": {

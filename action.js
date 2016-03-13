@@ -56,9 +56,12 @@ function send(url) {
 				body: post,
 				credentials: 'include',
 				redirect: 'manual'
-			}).then(
-				resp => resp.status && notify(`Something went wrong during upload: ${resp.status} ${resp.statusText}`)
-			),
+			}).then(resp => {
+				if (resp.status) {
+					notify(`Something went wrong during upload: ${resp.status} ${resp.statusText}`);
+					return Promise.reject(resp);
+				}
+			}),
 		resp => Promise.reject(resp)
 	);
 };
@@ -96,11 +99,18 @@ chrome.runtime.onInstalled.addListener(function() {
 	  "title" : "Send image to funny-feed",
 	  "id": "sendToFunnyFeed",
 	  "type" : "normal",
-	  "contexts" : ["image"]
+	  "contexts" : ["image", "selection"]
 	});
 });
 
 /**
  * Action to context menu, will send image to funny-feed
  */
-chrome.contextMenus.onClicked.addListener((info, tab) => send(info.srcUrl).catch(() => {}));
+chrome.contextMenus.onClicked.addListener((info, tab) => {
+	send(info.selectionText || info.srcUrl).then(
+		resp => {
+			info.pageUrl == info.srcUrl && chrome.tabs.remove(tab.id);
+		},
+		() => {}
+	);
+});
